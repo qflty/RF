@@ -1,11 +1,10 @@
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from businesskeys.public import login
+from businesskeys.public import login, judge_create
 from businesskeys.scan import change_directory, switch_tabs, input_cve_number
 from position.consants import CREATE_PROGRAM_BUTTON, PROGRAM_NAME_LOCATER, STE_DEFAULT, PROGRAM_DESCRIPTION_INPUT, \
     ADD_BUTTON, PROGRAM_CONFIRM_BUTTON
 from webkeys.webkeys import BrowserController, get_number
-from sql.sql1 import getpgsql
 
 
 class scan_program_create:
@@ -61,21 +60,7 @@ class scan_program_create:
         self.driver.capture()
         # 关闭浏览器
         self.driver.close()
-
-
-def judge():
-    try:
-        sql1 = "select * from neptune_artifact_scan_plan where is_deleted = 'N' order by gmt_created desc limit 1;"
-        results = getpgsql(sql=sql1)
-        if results:  # 检查是否有返回结果
-            if "扫描方案C" in results[0][0]:
-                print(f"自动化创建扫描方案成功:{results[0][0]}")
-            else:
-                print("自动化创建扫描方案失败")
-        else:
-            print("自动化创建扫描方案失败：未找到该方案")
-    except Exception as e:
-        print(f"数据库连接失败：{e}")
+        return scan_program_name
 
 
 def main():
@@ -84,9 +69,10 @@ def main():
     browser_study = scan_program_create(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    browser_study.create_program(name="扫描方案C", description="自动化创建扫描方案", number="CVE-2024-0530")
+    program_name = browser_study.create_program(name="扫描方案E", description="自动化创建扫描方案", number="CVE-2024-0530")
+    judge_create(program_name)
 
 
 if __name__ == '__main__':
     main()
-    judge()
+
