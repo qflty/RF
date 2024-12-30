@@ -1,8 +1,7 @@
 from selenium.webdriver.common.by import By
-from businesskeys.public import login
+from businesskeys.public import login, judge_delete
 from businesskeys.scan import change_directory, switch_tabs, scan_program_search
 from position.consants import DELETE_SCANNER_PROGRAM, DELETE_PROGRAM_CONFIRM_BUTTON, DELETE_CONFIRM
-from sql.sql1 import getpgsql
 from webkeys.webkeys import BrowserController
 
 
@@ -42,21 +41,7 @@ class scan_program_delete:
         self.driver.capture()
         # 关闭浏览器
         self.driver.close()
-
-
-def judge(program):
-    try:
-        sql1 = f"select * from neptune_artifact_scan_plan where plan_name = '{program}' and is_deleted = 'Y'"
-        results = getpgsql(sql=sql1)
-        if results:  # 检查是否有返回结果
-            if results[0]['plan_name'] == program:
-                print(f"自动化删除扫描方案成功: {program}")
-            else:
-                print("查询结果与预期不符")
-        else:
-            print("自动化删除扫描方案失败：未找到该方案")
-    except Exception as e:
-        print(f"数据库操作失败：{e}")
+        return program_name
 
 
 def main():
@@ -64,9 +49,9 @@ def main():
     browser_study = scan_program_delete(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    browser_study.delete_program('扫描方案B81595050')
+    program_name = browser_study.delete_program('扫描方案D17259227')  # 输入方案名称
+    judge_delete(program_name)
 
 
 if __name__ == '__main__':
     main()
-    judge('扫描方案B81595050')
