@@ -1,7 +1,7 @@
+import os
 import random
 import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys as SeleniumKeys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -53,18 +53,18 @@ class BrowserController:
         else:
             raise ValueError(f"Unsupported browser type: {browser_type}")
 
-
     # 等待
     def sleep(self, t=3):
-        """
-        :rtype: object
-        """
         time.sleep(t)
 
     # 访问url
     def open(self, url):
         self.driver.get(url)
         self.sleep(3)
+
+    # 刷新
+    def refresh(self):
+        self.driver.refresh()
 
     # 关闭浏览器
     def close(self):
@@ -84,14 +84,14 @@ class BrowserController:
             Ele = WebDriverWait(self.driver, total, interval).until(EC.visibility_of_element_located((method, locator)))
         else:
             Ele = WebDriverWait(self.driver, total, interval).until(
-                EC.visibility_of_all_elements_located((method, locator)))
+                EC.visibility_of_element_located((method, locator)))
         return Ele
 
-    # 元素定位
+    # 元素定位+显式等待
     def locate(self, method, locator, node='less', Sign=True):
         """
         :param node: 是否多路径
-        :param method: 定位方式
+        :param method: 定位方式r
         :param locator: 元素路径
         :param Sign: 定位失败是否跳过（True抛出异常，False跳过）
         """
@@ -103,6 +103,10 @@ class BrowserController:
             else:
                 return False
 
+    # 元素定位(无法显式定位)
+    def locato(self, method, locator):
+        return self.driver.find_element(method, locator)
+
     # 元素点击
     def click(self, method, locator, node='less', Sign=True):
         """
@@ -111,7 +115,10 @@ class BrowserController:
         :param locator: 元素路径
         :param Sign: 定位失败是否跳过（True抛出异常，False跳过）
         """
-        self.locate(method, locator, node, Sign).click()
+        try:
+            self.locate(method, locator, node, Sign).click()
+        except:
+            self.locato(method, locator).click()
 
     # 输入文本
     def input(self, method, locator, text, node='less', Sign=True):
@@ -122,7 +129,10 @@ class BrowserController:
         :param text: 输入文本
         :param Sign: 定位失败是否跳过（True抛出异常，False跳过）
         """
-        self.locate(method, locator, node, Sign).send_keys(text)
+        try:
+            self.locate(method, locator, node, Sign).send_keys(text)
+        except:
+            self.locato(method, locator).send_keys(text)
 
     # 获取文本
     def get_text(self, method, locator, node='less', Sign=True):
@@ -132,7 +142,10 @@ class BrowserController:
         :param locator: 元素路径
         :param Sign: 定位失败是否跳过（True抛出异常，False跳过）
         """
-        text = self.locate(method, locator, node, Sign).text
+        try:
+            text = self.locate(method, locator, node, Sign).text
+        except:
+            text = self.locato(method, locator).text
         return text
 
     # 清除文本
@@ -191,6 +204,20 @@ class BrowserController:
             print("Switched to the new window handle.")
         else:
             print("No new window to switch to.")
+
+    # 截图并保存
+    def capture(self, folder_path='screenshot'):
+        # 确保文件夹存在，如果不存在则创建它
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        # 获取当前时间戳，用于生成唯一的文件名
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"screenshot_{timestamp}.png"
+        # 构建完整的文件路径
+        file_path = os.path.join(folder_path, filename)
+        screenshot = self.driver.get_screenshot_as_png()
+        with open(file_path, 'wb') as file:
+            file.write(screenshot)
 
     # 判断元素是否存在
     def are_there(self, method, locator, node='less'):
@@ -260,6 +287,9 @@ class BrowserController:
         js = "var q=document.getElementById('id').scrollTop=" + num
         self.driver.execute_script(js)
 
+    def execute_js(self, js, element):
+        self.driver.execute_script(js, element)
+
     # 将x,y插入js字符串
     def change_js(self, x, y):
         js = "window.scrollTo(,);"
@@ -278,5 +308,3 @@ class BrowserController:
         js = self.change_js(x, y)
         self.driver.execute_script(js)
 
-    def refresh(self):
-        self.driver.refresh()
