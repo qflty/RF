@@ -67,12 +67,15 @@ def judge():
     try:
         sql1 = "select * from neptune_artifact_scan_plan where is_deleted = 'N' order by gmt_created desc limit 1;"
         results = getpgsql(sql=sql1)
-        if "扫描方案B" in results[0][0]:
-            print(f"自动化创建扫描方案成功:{results[0][0]}")
+        if results:  # 检查是否有返回结果
+            if "扫描方案C" in results[0][0]:
+                print(f"自动化创建扫描方案成功:{results[0][0]}")
+            else:
+                print("自动化创建扫描方案失败")
         else:
-            print("自动化创建扫描方案失败")
-    except:
-        print("数据库连接失败")
+            print("自动化创建扫描方案失败：未找到该方案")
+    except Exception as e:
+        print(f"数据库连接失败：{e}")
 
 
 def main():
@@ -81,7 +84,7 @@ def main():
     browser_study = scan_program_create(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    browser_study.create_program(name="扫描方案B", description="自动化创建扫描方案", number="CVE-2024-0530")
+    browser_study.create_program(name="扫描方案C", description="自动化创建扫描方案", number="CVE-2024-0530")
 
 
 if __name__ == '__main__':
