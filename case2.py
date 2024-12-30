@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-from businesskeys.public import login
+from businesskeys.public import login, judge_edit
 from businesskeys.scan import change_directory, switch_tabs, scan_program_search
 from position.consants import EDIT_SCANNER_PROGRAM, IMPORT_NUMBER_FILE_lOCATER, VULNERABILITY_NUMBER_FILE, \
     INPORT_NUMBER_BUTTON, IMPORT_NUMBER_CONFIRM_BUTTON, PROGRAM_CONFIRM_BUTTON, STE_DEFAULT
@@ -45,6 +45,7 @@ class scan_program_edit:
         self.driver.capture()
         # 关闭浏览器
         self.driver.close()
+        return program_name
 
 
 def main():
@@ -52,8 +53,10 @@ def main():
     browser_study = scan_program_edit(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    browser_study.edit_program('扫描方案C98187994')
+    program_name = browser_study.edit_program('扫描方案E61663267')  # 输入方案名称
+    judge_edit(program_name, 'CVE-2022-1001')
 
 
 if __name__ == '__main__':
     main()
+
