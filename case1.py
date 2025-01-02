@@ -1,13 +1,14 @@
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from businesskeys.public import login, judge_create
+from businesskeys.public import login, judge_plan_create
 from businesskeys.scan import change_directory, switch_tabs, input_cve_number
-from position.consants import CREATE_PROGRAM_BUTTON, PROGRAM_NAME_LOCATER, STE_DEFAULT, PROGRAM_DESCRIPTION_INPUT, \
-    ADD_BUTTON, PROGRAM_CONFIRM_BUTTON
+from position.consants import CREATE_BUTTON, PLAN_NAME_LOCATER, STE_DEFAULT, PLAN_DESCRIPTION_INPUT, \
+    ADD_BUTTON, PLAN_CONFIRM_BUTTON
 from webkeys.webkeys import BrowserController, get_number
 
 
-class scan_program_create:
+# 创建扫描方案
+class CreateScanPlan:
     def __init__(self, driver):
         self.driver = driver
 
@@ -21,13 +22,13 @@ class scan_program_create:
 
     # 制品扫描选择tab页
     def switch_tabs_succeed(self, tab):
-        switch_tabs(self.driver, tab=tab)
+        switch_tabs(self.driver, tab)
 
     # 添加漏洞编号
     def input_cve_number_succeed(self, num, txt):
-        input_cve_number(self.driver, num=num, txt=txt)
+        input_cve_number(self.driver, num, txt)
 
-    def create_program(self, name, description, number, position=1):
+    def create_plan(self, name, description, number, position=1):
         """
         :param name: 方案名称
         :param description: 描述
@@ -37,40 +38,40 @@ class scan_program_create:
         # 点击扫描方案tab
         self.switch_tabs_succeed('扫描方案')
         # 点击创建按钮
-        self.driver.click(method=By.XPATH, locator=CREATE_PROGRAM_BUTTON)
+        self.driver.click(By.XPATH, CREATE_BUTTON)
         # 输入方案名称
-        scan_program_name = name + str(get_number(8))
+        scan_plan_name = name + str(get_number(8))
         try:
-            self.driver.input(method=By.XPATH, locator=PROGRAM_NAME_LOCATER, text=scan_program_name)
+            self.driver.input(By.XPATH, PLAN_NAME_LOCATER, scan_plan_name)
         except TimeoutException:
             # 处理超时异常，例如记录日志、重试或给出用户提示
             print("无法在指定时间内找到方案名称")
         # 设为默认
-        self.driver.click(method=By.XPATH, locator=STE_DEFAULT)
+        self.driver.click(By.XPATH, STE_DEFAULT)
         # 输入描述
-        scan_program_description = description + str(get_number(8))
-        self.driver.input(method=By.XPATH, locator=PROGRAM_DESCRIPTION_INPUT, text=scan_program_description)
+        scan_plan_description = description + str(get_number(8))
+        self.driver.input(By.XPATH, PLAN_DESCRIPTION_INPUT, scan_plan_description)
         # 点击添加
-        self.driver.click(method=By.XPATH, locator=ADD_BUTTON)
+        self.driver.click(By.XPATH, ADD_BUTTON)
         # 输入漏洞编号
-        self.input_cve_number_succeed(num=position, txt=number)
-        self.driver.click(method=By.XPATH, locator=PROGRAM_CONFIRM_BUTTON)
+        self.input_cve_number_succeed(position, number)
+        self.driver.click(By.XPATH, PLAN_CONFIRM_BUTTON)
         # 截图
         self.driver.sleep(2)
         self.driver.capture()
         # 关闭浏览器
         self.driver.close()
-        return scan_program_name
+        return scan_plan_name
 
 
 def main():
     # 创建 BrowserStudy 类的实例
-    driver = BrowserController(browser_type='edge')
-    browser_study = scan_program_create(driver)
+    driver = BrowserController('edge')
+    browser_study = CreateScanPlan(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    program_name = browser_study.create_program(name="扫描方案E", description="自动化创建扫描方案", number="CVE-2024-0530")
-    judge_create(program_name)
+    plan_name = browser_study.create_plan("扫描方案E", "自动化创建扫描方案", "CVE-2024-0530")
+    judge_plan_create(plan_name)
 
 
 if __name__ == '__main__':
