@@ -1,11 +1,12 @@
 from selenium.webdriver.common.by import By
-from businesskeys.public import login, judge_delete
-from businesskeys.scan import change_directory, switch_tabs, scan_program_search
-from position.consants import DELETE_SCANNER_PROGRAM, DELETE_PROGRAM_CONFIRM_BUTTON, DELETE_CONFIRM
+from businesskeys.public import login, judge_plan_delete
+from businesskeys.scan import change_directory, switch_tabs, scan_plan_search
+from position.constants import DELETE_SCANNER_PLAN, DELETE_PLAN_CONFIRM_BUTTON, DELETE_CONFIRM
 from webkeys.webkeys import BrowserController
 
 
-class scan_program_delete:
+# 删除扫描方案
+class DeleteScanPlan:
     def __init__(self, driver):
         self.driver = driver
 
@@ -18,40 +19,37 @@ class scan_program_delete:
 
     # 制品扫描选择tab页
     def switch_tabs_succeed(self, tab):
-        switch_tabs(self.driver, tab=tab)
+        switch_tabs(self.driver, tab)
 
     # 扫描方案搜素框
-    def scan_program_search_succeed(self, txt):
-        scan_program_search(self.driver, txt=txt)
+    def scan_plan_search_succeed(self, txt):
+        scan_plan_search(self.driver, txt)
 
     # 删除扫描方案
-    def delete_program(self, program_name):
+    def delete_plan(self, plan_name):
         # 点击扫描方案tab
         self.switch_tabs_succeed('扫描方案')
         # 搜索扫描方案
-        self.scan_program_search_succeed(txt=program_name)
+        self.scan_plan_search_succeed(plan_name)
         # 点击删除扫描方案
-        self.driver.click(method=By.XPATH, locator=DELETE_SCANNER_PROGRAM)
+        self.driver.click(By.XPATH, DELETE_SCANNER_PLAN)
         # 删除弹窗
-        self.driver.according_wait(method=By.XPATH, locator=DELETE_CONFIRM)
+        self.driver.according_wait(By.XPATH, DELETE_CONFIRM)
         # 弹窗点击确定
-        self.driver.click(method=By.XPATH, locator=DELETE_PROGRAM_CONFIRM_BUTTON)
+        self.driver.click(By.XPATH, DELETE_PLAN_CONFIRM_BUTTON)
         # 截图
         self.driver.sleep(2)
         self.driver.capture()
         # 关闭浏览器
         self.driver.close()
-        return program_name
-
-
-def main():
-    driver = BrowserController(browser_type='edge')
-    browser_study = scan_program_delete(driver)
-    browser_study.login_succeed()
-    browser_study.change_directory_succeed()
-    program_name = browser_study.delete_program('扫描方案D17259227')  # 输入方案名称
-    judge_delete(program_name)
+        return plan_name
 
 
 if __name__ == '__main__':
-    main()
+    driver = BrowserController('edge')
+    browser_study = DeleteScanPlan(driver)
+    browser_study.login_succeed()
+    browser_study.change_directory_succeed()
+    plan_name = browser_study.delete_plan('扫描方案D17259227')  # 输入方案名称
+    judge_plan_delete(plan_name)
+
