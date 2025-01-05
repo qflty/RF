@@ -2,7 +2,7 @@ from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from businesskeys.public import login, judge_plan_create
 from businesskeys.scan import change_directory, switch_tabs, input_cve_number
-from position.consants import CREATE_BUTTON, PLAN_NAME_LOCATER, STE_DEFAULT, PLAN_DESCRIPTION_INPUT, \
+from position.constants import CREATE_BUTTON, PLAN_NAME_LOCATER, STE_DEFAULT, PLAN_DESCRIPTION_INPUT, \
     ADD_BUTTON, PLAN_CONFIRM_BUTTON
 from webkeys.webkeys import BrowserController, get_number
 
@@ -64,7 +64,7 @@ class CreateScanPlan:
         return scan_plan_name
 
 
-def main():
+if __name__ == '__main__':
     # 创建 BrowserStudy 类的实例
     driver = BrowserController('edge')
     browser_study = CreateScanPlan(driver)
@@ -72,8 +72,4 @@ def main():
     browser_study.change_directory_succeed()
     plan_name = browser_study.create_plan("扫描方案E", "自动化创建扫描方案", "CVE-2024-0530")
     judge_plan_create(plan_name)
-
-
-if __name__ == '__main__':
-    main()
 
