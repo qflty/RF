@@ -2,7 +2,7 @@ from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from position.constants import ARTIFACT_MANAGEMENT_BUTTON, ARTIFACT_SCANNER_BUTTON, \
     ROGRAM_TAB, TASK_TAB, CVE_NUMBER_INPUT, SCAN_PLAN_SEARCH_ELE, SCAN_CLICK_SEARCH, CHOOSE_PLAN_NAME, \
-    ENTER_KEYWORDS_IN_SEARCH_BOX, PRODUCT_TYPE_IN_SEARCH_BOX, TASK_SOURCE_IN_SEARCH_BOX
+    ENTER_KEYWORDS_IN_SEARCH_BOX, TASK_SOURCE_IN_SEARCH_BOX, DELETE_CONFIRM_BUTTON
 
 
 # 进入制品扫描
@@ -157,6 +157,13 @@ def scan_task_search(driver, task_name, task_source):
         driver.input(method=By.XPATH, locator=ENTER_KEYWORDS_IN_SEARCH_BOX, text=task_name)
         # 点击查询
         driver.click(method=By.XPATH, locator=SCAN_CLICK_SEARCH)
+        # 检查搜索结果是否存在
+        try:
+            result_xpath = f"(//span[contains(text(),'{task_name}')]/..)[2]"
+            driver.locato(By.XPATH, result_xpath)
+            print("查询有结果")
+        except NoSuchElementException:
+            print("查询无结果")
     except NoSuchElementException:
         driver.capture()
         print("查询失败")
@@ -164,18 +171,41 @@ def scan_task_search(driver, task_name, task_source):
         print(f"task_source_in_search_box发生错误：{str(e)}")
 
 
-# 扫描任务点击编辑
-def scan_task_click_edit(driver, task_name):
-    try:
-        driver.click(method=By.XPATH, locator=f"(//span[contains(text(),'{task_name}')]/../../../../td[10]/div/div/div/a/span[contains(text(),'编辑')]/..)[3]")
-    except NoSuchElementException:
-        driver.capture()
-        print('扫描任务不存在')
-    except Exception as e:
-        print(f"scan_task_click_edit发生错误：{str(e)}")
+# 扫描任务点击按钮
+def scan_task_click(driver, task_name, tag):
+    if tag == '编辑':
+        try:
+            driver.click(method=By.XPATH, locator=f"(//span[contains(text(),'{task_name}')]/../../../../td[10]/div/div/div/a/span[contains(text(),'编辑')]/..)[3]")
+        except NoSuchElementException:
+            driver.capture()
+            print('扫描任务不存在')
+        except Exception as e:
+            print(f"scan_task_click_edit发生错误：{str(e)}")
+    elif tag == '删除':
+        try:
+            driver.click(method=By.XPATH,
+                         locator=f"(//span[contains(text(),'{task_name}')]/../../../../td[10]/div/div/div/a/span[contains(text(),'删除')]/..)[3]")
+            driver.click(method=By.XPATH, locator=DELETE_CONFIRM_BUTTON)
+            print('扫描任务删除成功')
+        except NoSuchElementException:
+            driver.capture()
+            print('扫描任务不存在')
+        except Exception as e:
+            print(f"scan_task_click发生错误：{str(e)}")
+    elif tag == '执行':
+        try:
+            driver.click(method=By.XPATH,
+                         locator=f"(//span[contains(text(),'{task_name}')]/../../../../td[10]/div/div/div/a/span[contains(text(),'执行')]/..)[3]")
+            print('扫描任务执行成功')
+        except NoSuchElementException:
+            driver.capture()
+            print('扫描任务不存在')
+        except Exception as e:
+            print(f"scan_task_click发生错误：{str(e)}")
 
 
 # 设置质量门禁
 def set_quality_gates(self, gates):
     for xpath, value in gates.items():
         self.driver.input(By.XPATH, xpath, value)
+
