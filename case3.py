@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from businesskeys.public import login, judge_plan_delete
 from businesskeys.scan import change_directory, switch_tabs, scan_plan_search
-from position.constants import DELETE_SCANNER_PLAN, DELETE_PLAN_CONFIRM_BUTTON, DELETE_CONFIRM
+from position.constants import DELETE_SCANNER_PLAN, DELETE_CONFIRM_BUTTON, DELETE_CONFIRM
 from webkeys.webkeys import BrowserController
 
 
@@ -26,9 +26,9 @@ class DeleteScanPlan:
         scan_plan_search(self.driver, txt)
 
     # 删除扫描方案
-    def delete_plan(self, plan_name):
+    def delete_plan(self, tab, plan_name):
         # 点击扫描方案tab
-        self.switch_tabs_succeed('扫描方案')
+        self.switch_tabs_succeed(tab)
         # 搜索扫描方案
         self.scan_plan_search_succeed(plan_name)
         # 点击删除扫描方案
@@ -36,7 +36,7 @@ class DeleteScanPlan:
         # 删除弹窗
         self.driver.according_wait(By.XPATH, DELETE_CONFIRM)
         # 弹窗点击确定
-        self.driver.click(By.XPATH, DELETE_PLAN_CONFIRM_BUTTON)
+        self.driver.click(By.XPATH, DELETE_CONFIRM_BUTTON)
         # 截图
         self.driver.sleep(2)
         self.driver.capture()
@@ -50,6 +50,6 @@ if __name__ == '__main__':
     browser_study = DeleteScanPlan(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    plan_name = browser_study.delete_plan('扫描方案D17259227')  # 输入方案名称
+    plan_name = browser_study.delete_plan('扫描方案', '扫描方案D17259227')
     judge_plan_delete(plan_name)
 
