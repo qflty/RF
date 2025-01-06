@@ -16,9 +16,6 @@ class EditScanTask:
         change_directory(self.driver)
         switch_tabs(self.driver, '扫描任务')
 
-    def set_quality_gates_succeed(self, gates):
-        set_quality_gates(self.driver, gates)
-
     # 编辑扫描任务
     def edit_task(self, task_name, source):
         self.login_and_navigate()
@@ -28,9 +25,9 @@ class EditScanTask:
         scan_task_click_edit(self.driver, task_name)
         # 点击质量门禁并设置质量门禁
         self.driver.click(By.XPATH, QUALITY_CONTROL)
-        self.set_quality_gates_succeed(
-            {SERIOUS_LEVEL: '10', HIGH_RISK_LEVEL: '20', MODERATE_RISK_LEVEL: '30',
-             LOW_RISK_LEVEL: '40', UNRATED_LEVEL: '50'}
+        set_quality_gates(
+            self.driver, {SERIOUS_LEVEL: '10', HIGH_RISK_LEVEL: '20', MODERATE_RISK_LEVEL: '30',
+                          LOW_RISK_LEVEL: '40', UNRATED_LEVEL: '50'}
         )
         # 点击保存
         self.driver.click(By.XPATH, SAVE_ONLY_BUTTON)
@@ -45,5 +42,4 @@ class EditScanTask:
 if __name__ == '__main__':
     driver = BrowserController('edge')
     browser_study = EditScanTask(driver)
-    browser_study.edit_task(task_name='自动化创建30938353',source='手动创建')
-
+    browser_study.edit_task(task_name='自动化创建30938353', source='手动创建')
