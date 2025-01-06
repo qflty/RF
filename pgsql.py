@@ -1,7 +1,7 @@
 import psycopg2
 from psycopg2.extras import DictCursor
 
-from position.consants import pg_test_user, pg_test_password, pg_test_host, pg_test_port, pg_test_database
+from position.constants import pg_test_user, pg_test_password, pg_test_host, pg_test_port, pg_test_database
 
 
 class PgsqlManager:
@@ -23,7 +23,8 @@ class PgsqlManager:
             cursor = conn.cursor(cursor_factory=DictCursor)
             return cursor
         except Exception as e:
-            print(e)
+            print(f"连接数据库失败: {e}")
+            return None
 
     def get_data(self, sql):
         global cursor
@@ -37,23 +38,28 @@ class PgsqlManager:
             cursor.close()
 
     def get_all_data(self, sql, params=None):
+        # 使用连接创建游标对象
+        cursor = self.connect()
         try:
-            # 使用连接创建游标对象
-            cursor = self.connect()
-            # 执行SQL查询
-            cursor.execute(sql, params)
-            # 获取所有查询结果
-            results = cursor.fetchall()
-            i = 0
-            for row in results:
-                print(row)
-                i = i + 1
-            print(f"总共查到{i}条记录")
-            return results
+            if cursor:
+                # 执行SQL查询
+                cursor.execute(sql, params)
+                # 获取所有查询结果
+                results = cursor.fetchall()
+                i = 0
+                for row in results:
+                    print(row)
+                    i = i + 1
+                print(f"总共查到{i}条记录")
+                return results
+            else:
+                return []
         except (Exception, psycopg2.Error) as error:
-            print("Error while connecting to MySQL", error)
+            print(f"执行SQL查询时发生错误: {error}")
+            return []
         finally:
-            cursor.close()
+            if cursor:
+                cursor.close()
 
 
 # if __name__ == '__main__':
