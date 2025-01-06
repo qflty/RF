@@ -1,6 +1,6 @@
 import pymysql
 
-from position.consants import my_test_host, my_test_port, my_test_user, my_test_password, my_test_database
+from position.constants import my_test_host, my_test_port, my_test_user, my_test_password, my_test_database
 
 
 class MysqlManager:
@@ -56,12 +56,12 @@ class MysqlManager:
             cursor.close()
 
 
-if __name__ == "__main__":
-    host = my_test_host
-    port = my_test_port
-    user = my_test_user
-    password = my_test_password
-    database = my_test_database
-    mysql = MysqlManager(host, port, user, password, database)
-    sql_query = "select * from mars_case_library where space_id = 8143 and is_deleted = 'N' order by gmt_created;"
-    all_data = MysqlManager.get_all_data(mysql, sql_query)
+# if __name__ == "__main__":
+#     host = my_test_host
+#     port = my_test_port
+#     user = my_test_user
+#     password = my_test_password
+#     database = my_test_database
+#     mysql = MysqlManager(host, port, user, password, database)
+#     sql_query = "select * from mars_case_library where space_id = 8143 and is_deleted = 'N' order by gmt_created;"
+#     all_data = MysqlManager.get_all_data(mysql, sql_query)
