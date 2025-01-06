@@ -174,3 +174,8 @@ def scan_task_click_edit(driver, task_name):
     except Exception as e:
         print(f"scan_task_click_edit发生错误：{str(e)}")
 
+
+# 设置质量门禁
+def set_quality_gates(self, gates):
+    for xpath, value in gates.items():
+        self.driver.input(By.XPATH, xpath, value)
