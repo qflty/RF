@@ -48,7 +48,7 @@ class CreateScanTask:
     def delete_product_succeed(self, position=1):
         delete_product(self.driver, position)
 
-    def create_task(self, plan_name, task_name, type, scope, warehouse, product_name, version, product_path,
+    def create_task(self, tab, plan_name, task_name, type, scope, warehouse, product_name, version, product_path,
                     position=1):
         """
         :param plan_name: 方案名称
@@ -62,7 +62,7 @@ class CreateScanTask:
         :param position: 编号位置
         """
         # 点击扫描方案tab
-        self.switch_tabs_succeed('扫描任务')
+        self.switch_tabs_succeed(tab)
         # 点击创建按钮
         self.driver.click(By.XPATH, CREATE_BUTTON)
         # 选择所属节点
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     browser_study = CreateScanTask(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    task_name = browser_study.create_task(plan_name="方案验收", task_name="自动化创建", type='Generic',
+    task_name = browser_study.create_task(tab='扫描任务', plan_name="方案验收", task_name="自动化创建", type='Generic',
                                           scope='指定制品扫描', warehouse='demo-generic', product_name='update',
                                           version='11.20', product_path='/')
     sql_template = "select * from neptune_artifact_scan_task where task_name = %s and is_deleted = 'N'"
