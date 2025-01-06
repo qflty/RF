@@ -27,9 +27,9 @@ class EditScanPlan:
         scan_plan_search(self.driver, txt)
 
     # 编辑扫描方案
-    def edit_plan(self, plan_name):
+    def edit_plan(self, tab, plan_name):
         # 点击扫描方案tab
-        self.switch_tabs_succeed('扫描方案')
+        self.switch_tabs_succeed(tab)
         # 搜索扫描方案
         self.scan_plan_search_succeed(plan_name)
         # 点击编辑扫描方案
@@ -54,6 +54,6 @@ if __name__ == '__main__':
     browser_study = EditScanPlan(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    plan_name = browser_study.edit_plan('扫描方案E61663267')  # 输入方案名称
+    plan_name = browser_study.edit_plan('扫描方案', '扫描方案E61663267')
     judge_plan_edit(plan_name, 'CVE-2022-1001')
 
