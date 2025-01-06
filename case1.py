@@ -28,15 +28,16 @@ class CreateScanPlan:
     def input_cve_number_succeed(self, num, txt):
         input_cve_number(self.driver, num, txt)
 
-    def create_plan(self, name, description, number, position=1):
+    def create_plan(self, tab, name, description, number, position=1):
         """
+        :param tab: tab页
         :param name: 方案名称
         :param description: 描述
         :param number: 漏洞编号
         :param position: 编号位置
         """
         # 点击扫描方案tab
-        self.switch_tabs_succeed('扫描方案')
+        self.switch_tabs_succeed(tab)
         # 点击创建按钮
         self.driver.click(By.XPATH, CREATE_BUTTON)
         # 输入方案名称
@@ -70,6 +71,6 @@ if __name__ == '__main__':
     browser_study = CreateScanPlan(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    plan_name = browser_study.create_plan("扫描方案E", "自动化创建扫描方案", "CVE-2024-0530")
+    plan_name = browser_study.create_plan('扫描方案', "扫描方案E", "自动化创建扫描方案", "CVE-2024-0530")
     judge_plan_create(plan_name)
 
