@@ -22,7 +22,7 @@ USERNAME = "admin"
 PASSWORD_LOCATER = "//input[@id='temppassword']"
 PASSWORD = "Admin@2024"
 # 登录按钮
-LOGIN_BUTTON = "login-btn"
+LOGIN_BUTTON = "//input[@id='login-btn']"
 # 登录后弹窗
 BUTTON1 = "//span[contains(text(),'我知道了')]"
 BUTTON2 = "//span[contains(text(),'工作台')]"
