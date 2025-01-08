@@ -69,7 +69,7 @@ DELETE_SCANNER_PLAN = "//*[@id='app']/div/section/div/main/div/div[1]/div[3]/div
 # 删除弹窗
 DELETE_CONFIRM = "//*[contains(text(), '确定删除当前方案吗')]"
 # 删除方案点击确定
-DELETE_PLAN_CONFIRM_BUTTON = "//*[contains(text(), '确 定')]/.."
+DELETE_CONFIRM_BUTTON = "//*[contains(text(), '确 定')]/.."
 # 创建扫描任务页面
 CREATE_TASK = "//*[contains(text(),'创建扫描任务')]"
 # 所属节点
