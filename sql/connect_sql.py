@@ -1,7 +1,7 @@
 from position.constants import pg_test_user, pg_test_host, pg_test_password, pg_test_port, pg_test_database, \
     my_test_host, my_test_port, my_test_user, my_test_password, my_test_database
-from sql.mysql import MysqlManager
-from sql.pgsql import PgsqlManager
+from sql_sample.mysql import MysqlManager
+from sql_sample.pgsql import PgsqlManager
 
 
 # 数据库连接-测试环境

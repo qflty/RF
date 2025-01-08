@@ -90,9 +90,15 @@ def test_login(driver, username, password):
     login(driver, username, password)
 
 
-if __name__ == '__main__':
-    pytest.main(["-s", "-v", "--alluredir=allure_file"])
+# if __name__ == '__main__':
+#     pytest.main(["-s", "-v", "--alluredir=allure_file"])
 
+# 自动操作
+# 用subprocess的方法操作命令行
+# subprocess.call('allure generate allure_file -o allure_report --clean', shell=True)
+# subprocess.call('allure open -h 127.0.0.1 -p 9999 allure_report', shell=True)
+
+# 手动操作
 # 执行前删除allure_file
 # pytest -v --alluredir=allure_file 或者 pytest  test_login.py -v --alluredir=allure_file
 # allure generate allure_file -o allure_report --clean
