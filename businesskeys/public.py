@@ -14,12 +14,12 @@ def login(driver):
     driver.open(url=URL_TEST)
     try:
         # 输入账号和密码，点击登录
-        driver.input(method=By.ID, locator=USERNAME_LOCATER, text=USERNAME)
-        driver.input(method=By.ID, locator=PASSWORD_LOCATER, text=PASSWORD)
-        driver.click(method=By.ID, locator=LOGIN_BUTTON)
+        driver.input(method=By.XPATH, locator=USERNAME_LOCATER, text=USERNAME)
+        driver.input(method=By.XPATH, locator=PASSWORD_LOCATER, text=PASSWORD)
+        driver.click(method=By.XPATH, locator=LOGIN_BUTTON)
         driver.sleep()
     except (NoSuchElementException, TimeoutError):
-        print("Element not found by ID")
+        print("Element not found")
     try:
         driver.click(method=By.XPATH, locator=BUTTON1)
         driver.sleep()

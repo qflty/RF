@@ -36,11 +36,11 @@ def login(driver, username, password):
     with allure.step('步骤2：输入账号和密码'):
         try:
             username_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, USERNAME_LOCATER))  # 替换为实际的用户名输入框ID
+                EC.presence_of_element_located((By.XPATH, USERNAME_LOCATER))  # 替换为实际的用户名输入框ID
             )
             username_input.send_keys(username)
             password_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, PASSWORD_LOCATER))  # 替换为实际的密码输入框ID
+                EC.presence_of_element_located((By.XPATH, PASSWORD_LOCATER))  # 替换为实际的密码输入框ID
             )
             password_input.send_keys(password)
         except (NoSuchElementException, TimeoutException) as e:
@@ -48,7 +48,7 @@ def login(driver, username, password):
     with allure.step('步骤3：点击登录按钮'):
         try:
             login_button = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, LOGIN_BUTTON))  # 替换为实际的登录按钮ID
+                EC.element_to_be_clickable((By.XPATH, LOGIN_BUTTON))  # 替换为实际的登录按钮ID
             )
             login_button.click()
         except (NoSuchElementException, TimeoutException) as e:
@@ -66,7 +66,7 @@ def login(driver, username, password):
             )
             logout_button.click()
             WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, USERNAME_LOCATER))
+                EC.presence_of_element_located((By.XPATH, USERNAME_LOCATER))
             )
         except Exception as e:
             print(f"登录失败:{username},错误{e}")

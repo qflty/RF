@@ -16,10 +16,10 @@ my_test_database = 'tech_magic_base_t_00'
 # 环境地址
 URL_TEST = "http://cube-front.product.poc.za-tech.net"
 # 账号
-USERNAME_LOCATER = "username"
+USERNAME_LOCATER = "//input[@id='username']"
 USERNAME = "admin"
 # 密码
-PASSWORD_LOCATER = "temppassword"
+PASSWORD_LOCATER = "//input[@id='temppassword']"
 PASSWORD = "Admin@2024"
 # 登录按钮
 LOGIN_BUTTON = "login-btn"
