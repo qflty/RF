@@ -6,7 +6,7 @@ from businesskeys.public import login
 from businesskeys.scan import change_directory, switch_tabs, input_cve_number
 from position.constants import CREATE_BUTTON, PLAN_NAME_LOCATER, STE_DEFAULT, PLAN_DESCRIPTION_INPUT, ADD_BUTTON, \
     PLAN_CONFIRM_BUTTON
-from testcases.study import get_number
+from businesskeys.public import get_number
 from testcases.test_login import read_excel_data
 from webkeys.webkeys import BrowserController
 

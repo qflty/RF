@@ -1,4 +1,6 @@
 import json
+import random
+
 from openpyxl.reader.excel import load_workbook
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -100,6 +102,12 @@ def judge_task(sql_template, task_name=None):
             print("自动化查询扫描任务失败：未找到该任务")
     except Exception as e:
         print(f"数据库连接失败：{e}")
+
+
+# 获取固定长度随机数
+def get_number(length):
+    num = random.randint(10 ** (length - 1), 10 ** length - 1)
+    return num
 
 
 # 保存cookies
