@@ -5,7 +5,7 @@ from businesskeys.public import login
 from businesskeys.scan import change_directory, switch_tabs, choose_plan, choose_product_type, \
     choose_scan_scope, choose_product, clone_product, delete_product
 from position.constants import CREATE_BUTTON, BELONGING_NODE, CHOOSE_NODE, SCAN_TASK_NAME, ADD_BUTTON, SAVE_ONLY_BUTTON
-from testcases.study import get_number
+from businesskeys.public import get_number
 from testcases.test_login import read_excel_data
 from webkeys.webkeys import BrowserController
 

@@ -1,4 +1,3 @@
-from time import sleep
 import allure
 import openpyxl
 import pytest
