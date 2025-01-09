@@ -2,8 +2,6 @@ import json
 import allure
 import openpyxl
 import pytest
-from pyecharts.charts import Bar
-from pyecharts import options as opts
 from position.constants import URL_TEST, USERNAME_LOCATER, PASSWORD_LOCATER, LOGIN_BUTTON, USER_BUTTON, LOGOUT_BUTTON
 from playwright.sync_api import sync_playwright
 
@@ -37,7 +35,6 @@ def page(browser):
 
 
 @allure.title('登录验证')
-# 登录函数
 def login(page, username, password):
     with allure.step('步骤1：打开页面'):
         page.goto(URL_TEST)
@@ -52,25 +49,29 @@ def login(page, username, password):
             user_button_exists = page.wait_for_selector(USER_BUTTON, timeout=5000)
             if user_button_exists:
                 page.hover(USER_BUTTON)
-                page.wait_for_selector(LOGOUT_BUTTON, timeout=3000)
-                page.click(LOGOUT_BUTTON)
+                logout_button_exists = page.wait_for_selector(LOGOUT_BUTTON, timeout=3000)
+                if logout_button_exists:
+                    page.click(LOGOUT_BUTTON)
+                else:
+                    raise AssertionError(f"登录后未找到注销按钮: {username}")
             else:
-                raise AssertionError(f"登录失败: {username}")
-        except Exception:
-            pytest.fail(f"登录失败: {username}")
+                raise AssertionError(f"登录失败: 未找到用户按钮，用户名: {username}")
+        except Exception as e:
             raise AssertionError(f"登录失败: {username}")
 
 
 # 创建一个名为data的临时目录，并在该目录下创建一个名为test_results.json的文件，用于存放测试相关的数据或结果
 @pytest.fixture(scope="session")
-def test_results_collector(tmpdir_factory):
-    # test_results = defaultdict(lambda: {'success': 0, 'failure': 0})
+def test_results_collector(tmpdir_factory, request):
+    # results = defaultdict(lambda: {'success': 0, 'failure': 0})
     results_file = tmpdir_factory.mktemp("data").join("test_results.json")
+    # 将 results_file 路径保存到 session 对象上
+    request.session.results_file_path = str(results_file)  # 使用 str() 转换为字符串路径
     results = {'success': 0, 'failure': 0}
     yield results
     with open(results_file, 'w') as f:
         json.dump(dict(results), f, indent=4)
-    print(f"测试会话结束，结果已保存到 {results_file}")
+    print(f"\n测试会话结束，结果已保存到 {results_file}")
 
 
 # pytest参数化测试
@@ -81,24 +82,8 @@ def test_results_collector(tmpdir_factory):
 def test_login(page, username, password, test_results_collector):
     try:
         login(page, username, password)
-        test_results_collector[username]['success'] += 1
-    except AssertionError:
-        test_results_collector[username]['failure'] += 1
+        test_results_collector['success'] += 1
+    except AssertionError as e:
+        test_results_collector['failure'] += 1
+        raise e
 
-
-def pytest_sessionfinish(session, exitstatus):
-    results_file_path = session.config.getoption("--basetemp") / "data" / "test_results.json"
-    # 读取并处理结果文件
-    with open(results_file_path, 'r') as f:
-        results = json.load(f)
-    print(f"测试会话结束后的最终结果：{results}")
-    success_count = results['success']  # 直接访问字典中的值
-    failure_count = results['failure']
-    print(f"钩子函数返回：{results}")
-    # 创建柱状图
-    bar = Bar()
-    bar.add_xaxis(['成功', '失败'])
-    bar.add_yaxis('测试结果', [success_count, failure_count])
-    bar.set_global_opts(title_opts=opts.TitleOpts(title='登录测试结果'))
-    # 渲染图表并保存为HTML文件
-    bar.render('login_test_results.html')
