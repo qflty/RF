@@ -11,7 +11,7 @@ def read_excel_data(file_path, sheet_name):
     workbook = openpyxl.load_workbook(file_path)
     sheet = workbook[sheet_name]
     data = []
-    for row in sheet.iter_rows(min_row=2, values_only=True):  # 假设第一行是标题行
+    for row in sheet.iter_rows(min_row=2, values_only=True):  # 第一行是标题行
         data.append(row)
     return data
 
@@ -20,7 +20,7 @@ def read_excel_data(file_path, sheet_name):
 @pytest.fixture(scope="module")
 def browser():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False,channel='msedge')  # 以有头模式启动浏览器（可选）
+        browser = p.chromium.launch(headless=False, channel='msedge')
         yield browser
         browser.close()
 
@@ -38,36 +38,31 @@ def page(browser):
 # 登录函数
 def login(page, username, password):
     with allure.step('步骤1：打开页面'):
-        page.goto(URL_TEST)  # 替换为登录URL
-        sleep(5)
+        page.goto(URL_TEST)
     with allure.step('步骤2：输入账号和密码'):
-        try:
-            page.fill(USERNAME_LOCATER, str(username))
-            sleep(2)
-            page.fill(PASSWORD_LOCATER, str(password))
-        except Exception as e:
-            print(f"输入账号密码失败，错误信息：{e}")
+        page.wait_for_selector(USERNAME_LOCATER)
+        page.type(USERNAME_LOCATER, str(username))
+        page.type(PASSWORD_LOCATER, str(password))
     with allure.step('步骤3：点击登录按钮'):
-        try:
-            page.click(LOGIN_BUTTON)
-        except Exception as e:
-            print(f"点击登录失败，错误信息：{e}")
+        page.click(LOGIN_BUTTON)
     with allure.step('步骤4：判断是否登录成功'):
         try:
-            sleep(3)
+            page.wait_for_selector(USER_BUTTON)
             page.hover(USER_BUTTON)
-            print(f"登录成功:{username}")
+            page.wait_for_selector(LOGOUT_BUTTON)
             page.click(LOGOUT_BUTTON)
-            sleep(3)
-        except Exception as e:
-            print(f"登录失败:{username},错误{e}")
-            raise
+            page.wait_for_selector(USERNAME_LOCATER)
+            return True
+        except Exception:
+            # allure.attach.text(f"登录失败: {username}, 错误: {e}", name="登录错误")
+            return False
 
 
 # pytest参数化测试
 @pytest.mark.parametrize(
     "username,password",
-    read_excel_data('test_data.xlsx', 'Sheet1')  # 替换为你的Excel文件路径和Sheet名称
+    read_excel_data('test_data.xlsx', 'Sheet1')
 )
 def test_login(page, username, password):
-    login(page, username, password)
+    assert login(page, username, password), f"登录失败：{username}"
+
