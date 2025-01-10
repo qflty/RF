@@ -69,8 +69,9 @@ def test_results_collector(tmpdir_factory, request):
     request.session.results_file_path = str(results_file)
     results = {'success': 0, 'failure': 0}
     yield results
+    # 打开创建文件，将文件内容以json格式写入文件
     with open(results_file, 'w') as f:
-        json.dump(dict(results), f, indent=4)
+        json.dump(dict(results), f, indent=4)  # indent=4意味着每一层级的JSON对象或数组将会在新的行上开始，并且每个层级将使用4个空格字符进行缩进
     print(f"\n测试会话结束，结果已保存到 {results_file}")
 
 
