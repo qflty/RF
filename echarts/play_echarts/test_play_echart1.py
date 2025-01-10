@@ -66,7 +66,7 @@ def test_results_collector(tmpdir_factory, request):
     # results = defaultdict(lambda: {'success': 0, 'failure': 0})
     results_file = tmpdir_factory.mktemp("data").join("test_results.json")
     # 将 results_file 路径保存到 session 对象上
-    request.session.results_file_path = str(results_file)  # 使用 str() 转换为字符串路径
+    request.session.results_file_path = str(results_file)
     results = {'success': 0, 'failure': 0}
     yield results
     with open(results_file, 'w') as f:
