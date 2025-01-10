@@ -30,12 +30,12 @@ BUTTON2 = "//span[contains(text(),'工作台')]"
 USER_BUTTON = "(//span[contains(text(),'梅')]/..)[1]"
 LOGOUT_BUTTON = "//span[contains(text(),'登出')]/.."
 # 菜单
-ARTIFACT_MANAGEMENT_BUTTON = "//li[@name='制品管理']"
-ARTIFACT_SCANNER_BUTTON = "//li[@name='制品管理']/ul/li[@name='制品扫描']"
+ARTIFACT_MANAGEMENT_BUTTON = "//p[contains(text(),'制品')]/../.."
+ARTIFACT_SCANNER_BUTTON = "//p[contains(text(),'制品扫描')]/../../.."
 # 制品扫描定位：扫描方案 ---------------------------------------
 # 制品扫描tab页
-ROGRAM_TAB = "//div[contains(text(),'制品扫描')]/../li/span[contains(text(),'扫描方案')]/.."
-TASK_TAB = "//div[contains(text(),'制品扫描')]/../li/span[contains(text(),'扫描任务')]/.."
+PLAN_BUTTON = "(//p[contains(text(),'制品扫描')]/../../../../div/div/div/div/div/button)[1]"
+TASK_BUTTON = "(//p[contains(text(),'制品扫描')]/../../../../div/div/div/div/div/button)[2]"
 # 创建按钮
 CREATE_BUTTON = "//*[@id='app']/div/section/div/main/div/div[1]/div[1]/button"
 # 方案名称

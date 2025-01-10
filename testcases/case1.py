@@ -71,6 +71,6 @@ if __name__ == '__main__':
     browser_study = CreateScanPlan(driver)
     browser_study.login_succeed()
     browser_study.change_directory_succeed()
-    plan_name = browser_study.create_plan('扫描方案', "扫描方案E", "自动化创建扫描方案", "CVE-2024-0530")
+    plan_name = browser_study.create_plan('扫描方案', "扫描方案E", "自动化创建", "CVE-2024-0530")
     judge_plan_create(plan_name)
 

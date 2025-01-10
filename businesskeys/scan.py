@@ -1,8 +1,8 @@
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 from position.constants import ARTIFACT_MANAGEMENT_BUTTON, ARTIFACT_SCANNER_BUTTON, \
-    ROGRAM_TAB, TASK_TAB, CVE_NUMBER_INPUT, SCAN_PLAN_SEARCH_ELE, SCAN_CLICK_SEARCH, CHOOSE_PLAN_NAME, \
-    ENTER_KEYWORDS_IN_SEARCH_BOX, TASK_SOURCE_IN_SEARCH_BOX, DELETE_CONFIRM_BUTTON
+    CVE_NUMBER_INPUT, SCAN_PLAN_SEARCH_ELE, SCAN_CLICK_SEARCH, CHOOSE_PLAN_NAME, \
+    ENTER_KEYWORDS_IN_SEARCH_BOX, TASK_SOURCE_IN_SEARCH_BOX, DELETE_CONFIRM_BUTTON, PLAN_BUTTON, TASK_BUTTON
 
 
 # 进入制品扫描
@@ -20,10 +20,10 @@ def switch_tabs(driver, tab):
     try:
         # 点击扫描方案tab
         if tab == '扫描方案':
-            driver.click(method=By.XPATH, locator=ROGRAM_TAB)
+            driver.click(method=By.XPATH, locator=PLAN_BUTTON)
             driver.sleep(1)
         elif tab == '扫描任务':
-            driver.click(method=By.XPATH, locator=TASK_TAB)
+            driver.click(method=By.XPATH, locator=TASK_BUTTON)
             driver.sleep(1)
     except NoSuchElementException:
         print("无法在指定时间内找到tab页面")
