@@ -2,6 +2,8 @@ from pyecharts.charts import Pie
 from pyecharts import options as opts
 from pyecharts.globals import ThemeType
 
+
+# 创建一个饼图对象
 # 初始化选项，选择主题，这里选择了LIGHT主题
 pie = Pie(init_opts=opts.InitOpts(theme=ThemeType.LIGHT))
 
