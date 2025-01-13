@@ -1,6 +1,7 @@
 import json
-from pyecharts.charts import Bar
+from pyecharts.charts import Bar, Pie
 from pyecharts import options as opts
+from pyecharts.globals import ThemeType
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -19,7 +20,19 @@ def pytest_sessionfinish(session, exitstatus):
         bar.add_yaxis('测试结果', [success_count, failure_count])
         bar.set_global_opts(title_opts=opts.TitleOpts(title='登录测试结果'))
         # 渲染图表并保存为HTML文件
-        bar.render('login_test_results.html')
+        bar.render('login_test_results1.html')
+
+        # 创建饼图
+        pie = Pie(init_opts=opts.InitOpts(theme=ThemeType.LIGHT))
+        # 添加数据和标签
+        pie.add(series_name='测试执行结果',
+                data_pair=[('成功', success_count), ('失败', failure_count)],
+                radius=["30%", "70%"])  # 设置饼图的内外半径，这里内半径为30%，外半径为75%
+        # 设置全局配置，例如标题
+        pie.set_global_opts(title_opts=opts.TitleOpts(title='登录测试', subtitle="这是一个简单的饼图"))
+        # 渲染图表并保存为HTML文件
+        pie.render('login_test_results2.html')
+
     except FileNotFoundError:
         print(f"结果文件 {results_file_path} 未找到")
     except json.JSONDecodeError:
