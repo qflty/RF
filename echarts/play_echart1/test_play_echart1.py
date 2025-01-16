@@ -1,37 +1,9 @@
 import json
 import allure
-import openpyxl
 import pytest
+
+from businesskeys.public import read_excel_data
 from position.constants import URL_TEST, USERNAME_LOCATER, PASSWORD_LOCATER, LOGIN_BUTTON, USER_BUTTON, LOGOUT_BUTTON
-from playwright.sync_api import sync_playwright
-
-
-# 读取Excel文件中的数据
-def read_excel_data(file_path, sheet_name):
-    workbook = openpyxl.load_workbook(file_path)
-    sheet = workbook[sheet_name]
-    data = []
-    for row in sheet.iter_rows(min_row=2, values_only=True):  # 第一行是标题行
-        data.append(row)
-    return data
-
-
-# 定义一个浏览器实例的 fixture，其作用范围为整个模块
-@pytest.fixture(scope="module")
-def browser():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False, channel='msedge')
-        yield browser
-        browser.close()
-
-
-# 定义一个浏览器页面的 fixture，其作用范围为每个测试函数
-@pytest.fixture(scope="function")
-def page(browser):
-    context = browser.new_context()
-    page = context.new_page()
-    yield page
-    context.close()
 
 
 @allure.title('登录验证')

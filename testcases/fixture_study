@@ -19,3 +19,10 @@
 7.yield 或 return：
 用于提供 fixture 的返回值。
 如果需要在测试完成后进行清理工作，可以使用 yield 语句，在 yield 之后编写的代码将在测试完成后执行。
+
+scope：
+function：默认作用域，每个测试用例都运行一次
+class：每个测试类只执行一次
+module：每个模块只执行一次(模块:一个.py文件)
+package：每个python包只执行一次
+session：整个会话只执行一次，即运行项目时整个过程只执行一次

@@ -1,6 +1,7 @@
 import json
 import random
 
+import openpyxl
 from openpyxl.reader.excel import load_workbook
 from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -130,3 +131,24 @@ def load_cookies(driver):
             driver.reflesh()
     except:
         print("没有可用的cookies信息")
+
+
+# 读取Excel文件中的数据
+def read_excel_data(file_path, sheet_name):
+    workbook = openpyxl.load_workbook(file_path)
+    sheet = workbook[sheet_name]
+    data = []
+    for row in sheet.iter_rows(min_row=2, values_only=True):  # 假设第一行是标题行
+        data.append(row)
+    # headers = [cell.value for cell in sheet[1]]  # 读取第一行作为标题
+    # for row in sheet.iter_rows(min_row=2, values_only=True):  # 从第二行开始读取数据
+    #     row_data = {}
+    #     for col_num, cell_value in enumerate(row, start=1):  # 枚举列号和单元格值
+    #         header = headers[col_num - 1]  # 获取对应的标题
+    #         if header == 'items':  # 假设 'items' 是包含物品列表的列标题
+    #             # 将逗号分隔的字符串转换为列表
+    #             row_data[header] = [item.strip() for item in cell_value.split(',')] if cell_value else []
+    #         else:
+    #             row_data[header] = cell_value
+    #     data.append(row_data)
+    return data

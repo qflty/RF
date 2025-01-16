@@ -1,32 +1,9 @@
 import pytest
 import allure
-from businesskeys.public import get_number
-from playwright.sync_api import sync_playwright
-from tools.tool import change_directory, switch_tabs, input_cve_number
+from businesskeys.public import get_number, read_excel_data
+from playwrights.tools.tool import change_directory, switch_tabs, input_cve_number
 from position.constants import USERNAME, PASSWORD, URL_TEST, USERNAME_LOCATER, PASSWORD_LOCATER, LOGIN_BUTTON, \
     CREATE_BUTTON, PLAN_NAME_LOCATER, STE_DEFAULT, PLAN_DESCRIPTION_INPUT, ADD_BUTTON, PLAN_CONFIRM_BUTTON
-from testcases.test_login import read_excel_data
-
-
-# 定义一个浏览器实例的 fixture，其作用范围为整个模块
-@pytest.fixture(scope="module")
-def browser():
-    with sync_playwright() as p:
-        # 生成浏览器驱动
-        browser = p.chromium.launch(headless=False, channel='msedge')
-        yield browser
-        browser.close()
-
-
-# 定义一个浏览器页面的 fixture，其作用范围为每个测试函数
-@pytest.fixture(scope="function")
-def page(browser):
-    # 生成浏览器上下文（context）对象
-    context = browser.new_context()
-    # 生成浏览器页面page
-    page = context.new_page()
-    yield page
-    context.close()
 
 
 @allure.title('新建制品扫描方案')

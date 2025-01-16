@@ -1,7 +1,27 @@
 import json
+import pytest
 from pyecharts.charts import Bar, Pie
 from pyecharts import options as opts
 from pyecharts.globals import ThemeType
+from playwright.sync_api import sync_playwright
+
+
+# 定义一个浏览器实例的 fixture，其作用范围为整个模块
+@pytest.fixture(scope="module")
+def browser():
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False, channel='msedge')
+        yield browser
+        browser.close()
+
+
+# 定义一个浏览器页面的 fixture，其作用范围为每个测试函数
+@pytest.fixture(scope="function")
+def page(browser):
+    context = browser.new_context()
+    page = context.new_page()
+    yield page
+    context.close()
 
 
 def pytest_sessionfinish(session, exitstatus):

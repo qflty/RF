@@ -1,5 +1,4 @@
 import pytest
-import openpyxl
 import allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -7,17 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
+from businesskeys.public import read_excel_data
 from position.constants import URL_TEST, USERNAME_LOCATER, PASSWORD_LOCATER, LOGIN_BUTTON, USER_BUTTON, LOGOUT_BUTTON
-
-
-# 读取Excel文件中的数据
-def read_excel_data(file_path, sheet_name):
-    workbook = openpyxl.load_workbook(file_path)
-    sheet = workbook[sheet_name]
-    data = []
-    for row in sheet.iter_rows(min_row=2, values_only=True):  # 假设第一行是标题行
-        data.append(row)
-    return data
 
 
 # @allure.suite('测试套件示例')
