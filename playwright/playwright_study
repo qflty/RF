@@ -56,6 +56,8 @@ frame = page.frame_locator(selector): 获取一个 FrameLocator 对象，用于�
 在指定 Frame 中执行 JavaScript
 frame = page.frame_evaluate(expression): 在指定的 frame 中执行 JavaScript 表达式并返回结果。
 
+page.locator(USERNAME_LOCATER).fill(USERNAME)  # 不模拟键盘输入，会触发 keydown、keyup 等键盘事件
+page.type(USERNAME_LOCATER, str(username))     # 逐个字符地输入，会触发所有相关的输入事件
 
 cmd中输入：playwright codegen --browser=chromium --channel=msedge [URL]，开始录制操作并生成代码
 -o :指定脚本录制输出位置（D:\pycharm\playwright录制）

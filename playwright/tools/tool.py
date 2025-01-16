@@ -27,8 +27,8 @@ def switch_tabs(page, tab):
 
 
 def input_cve_number(page, num, txt):
-    page.wait_for_selector(f"{CVE_NUMBER_INPUT}[{num}]")
     try:
+        page.wait_for_selector(f"{CVE_NUMBER_INPUT}[{num}]")
         page.locator(CVE_NUMBER_INPUT).fill(txt)
     except Exception as e:
         print(f'输入第{num}个漏洞编号失败:{e}')
