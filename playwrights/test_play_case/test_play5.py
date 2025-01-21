@@ -11,8 +11,8 @@ def select_and_buy(page, username, password, items):
     with allure.step('输入网址'):
         try:
             page.goto(url_test)
-        except TimeoutError as e:
-            pytest.fail(f"Failed to navigate to {url_test}: {str(e)}")
+        except playwright._impl._errors.TimeoutError as e:
+            pytest.fail(f"导航到{url_test}失败: {str(e)}")
     with allure.step('输入账号'):
         page.locator(login_ele['UserName']).fill(username)
     with allure.step('输入密码'):

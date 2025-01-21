@@ -1,6 +1,5 @@
 import json
 import random
-
 import openpyxl
 from openpyxl.reader.excel import load_workbook
 from selenium.common import NoSuchElementException
@@ -133,22 +132,101 @@ def load_cookies(driver):
         print("没有可用的cookies信息")
 
 
-# 读取Excel文件中的数据
+# 从 Excel 文件中读取指定工作表的数据
 def read_excel_data(file_path, sheet_name):
+    """
+    :param file_path: Excel 文件的路径
+    :param sheet_name: 工作表的名称
+    :return: 包含所有行数据的列表，每行数据以元组形式存储
+    """
+    # 参数验证
+    if not file_path:
+        raise ValueError("文件路径不能为空")
+    if not sheet_name:
+        raise ValueError("工作表名称不能为空")
+    # 使用openpyxl库的load_workbook函数加载Excel文件
+    workbook = openpyxl.load_workbook(file_path,read_only=True)
+    # 检查工作表是否存在
+    if sheet_name not in workbook.sheetnames:
+        raise ValueError(f"工作表 '{sheet_name}' 不存在")
+    # 从加载的工作簿中获取指定名称的工作表
+    sheet = workbook[sheet_name]
+    # 初始化一个空列表，用于存储读取的数据
+    data = []
+    # 使用sheet的iter_rows方法遍历工作表中的行
+    # min_row=2表示从第二行开始遍历（假设第一行是标题行）
+    # values_only=True表示只获取单元格的值，不获取单元格对象
+    try:
+        for row in sheet.iter_rows(min_row=2,values_only=True):
+            data.append(row)
+    except FileNotFoundError:
+        raise
+    except openpyxl.utils.exceptions.InvalidFileException:
+        raise
+    except Exception as e:
+        raise
+    finally:
+        # 确保工作簿被正确关闭，检查变量 workbook 是否在当前作用域中存在，如果存在，关闭工作簿
+        if 'workbook' in locals():  # 内置函数，返回当前作用域中的所有局部变量及其值的字典
+            workbook.close()
+    return data
+
+
+def read_excel_data2(file_path, sheet_name):
+    """
+    读取 Excel 文件中的数据，并返回一个列表的列表（不包含列名）。
+    对 'items' 列进行特殊处理，将其转换为列表。
+    :param file_path: Excel 文件的路径
+    :param sheet_name: 工作表的名称
+    :return: 包含所有行数据的列表，每行数据以列表形式存储
+    """
+    # 加载 Excel 文件
     workbook = openpyxl.load_workbook(file_path)
     sheet = workbook[sheet_name]
+    # 读取第一行作为标题（用于识别 'items' 列）
+    headers = [cell.value for cell in sheet[1]]
+    # 初始化数据列表
     data = []
-    for row in sheet.iter_rows(min_row=2, values_only=True):  # 假设第一行是标题行
-        data.append(row)
-    # headers = [cell.value for cell in sheet[1]]  # 读取第一行作为标题
-    # for row in sheet.iter_rows(min_row=2, values_only=True):  # 从第二行开始读取数据
-    #     row_data = {}
-    #     for col_num, cell_value in enumerate(row, start=1):  # 枚举列号和单元格值
-    #         header = headers[col_num - 1]  # 获取对应的标题
-    #         if header == 'items':  # 假设 'items' 是包含物品列表的列标题
-    #             # 将逗号分隔的字符串转换为列表
-    #             row_data[header] = [item.strip() for item in cell_value.split(',')] if cell_value else []
-    #         else:
-    #             row_data[header] = cell_value
-    #     data.append(row_data)
+    # 从第二行开始读取数据
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        row_data = []
+        for col_num, cell_value in enumerate(row):
+            if headers[col_num] == 'items' and cell_value:  # 处理 'items' 列
+                row_data.append([item.strip() for item in cell_value.split(',')])
+            else:
+                row_data.append(cell_value)  # 其他列直接存储值
+        data.append(row_data)
+    return data
+
+
+def read_excel_data3(file_path, sheet_name):
+    """
+    读取 Excel 文件中的数据，并返回一个列表的列表（不包含列名）。
+    对 'items' 列进行特殊处理，将其转换为列表。
+    :param file_path: Excel 文件的路径
+    :param sheet_name: 工作表的名称
+    :return: 包含所有行数据的列表，每行数据以字典形式存储
+    """
+    # 读取Excel文件中的数据
+    workbook = openpyxl.load_workbook(file_path)
+    sheet = workbook[sheet_name]
+    # 读取第一行作为标题
+    headers = []
+    for cell in sheet[1]:           # 遍历第一行的每个单元格
+        headers.append(cell.value)  # 将单元格的值添加到列表中
+    data = []
+    # 从第二行开始读取数据
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        row_data = {}
+        for col_num, cell_value in enumerate(row, start=1):  # 枚举列号和单元格值
+            header = headers[col_num - 1]  # 获取对应的标题
+            if header == 'items':
+    #           # 处理 'items' 列，将逗号分隔的字符串转换为列表
+                if cell_value:  # 检查 cell_value 是否为空
+                    row_data[header] = []
+                    for item in cell_value.split(','):  # 遍历按逗号分割后的每个元素
+                        row_data[header].append(item.strip())  # 去除元素前后的空白字符并添加到列表中
+            else:
+                row_data[header] = cell_value  # 对于其他列，直接存储值
+        data.append(row_data)
     return data

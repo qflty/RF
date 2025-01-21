@@ -27,6 +27,15 @@ select_remove = {
     "T-Shirt (Red)":"[data-test='remove-test.allthethings()-t-shirt-(red)']"
 }
 
+product_button = {
+    "Backpack":"[data-test='item-4-img-link']",
+    "Bike_Light":"[data-test='item-0-img-link']",
+    "Bolt_T-Shirt":"[data-test='item-1-img-link']",
+    "Fleece_Jacket":"[data-test='item-5-img-link']",
+    "Onesie":"[data-test='item-2-img-link']",
+    "T-Shirt (Red)":"[data-test='item-3-img-link']"
+}
+
 shop_cart_link = "[data-test='shopping-cart-link']"
 
 continue_shop = "[data-test='continue-shopping']"
