@@ -55,3 +55,7 @@ continue_button = "[data-test='continue']"
 finish_button = "[data-test='finish']"
 
 complete= "[data-test='complete-header']"
+
+menu_button = "[id='react-burger-menu-btn']"
+
+logout_button = "[id='logout_sidebar_link']"
